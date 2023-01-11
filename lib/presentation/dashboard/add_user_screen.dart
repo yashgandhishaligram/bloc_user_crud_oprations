@@ -5,8 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../../bloc/add user/adduser_bloc.dart';
 import '../../bloc/dashboard/dashboard_bloc.dart';
 import '../../remote/models/UserModel.dart';
-import '../../utils/validations/auth_form_velidation.dart';
-import 'dashboard_screen.dart';
+import '../../utils/validations/auth_form_validation.dart';
 
 class AddUserDetails extends StatefulWidget {
   AddUserDetails({Key? key, this.data, this.addFlag = true}) : super(key: key);
