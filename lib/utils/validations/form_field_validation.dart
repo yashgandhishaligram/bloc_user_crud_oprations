@@ -34,4 +34,25 @@ class FormFieldValidation {
       }
     }
   }
+
+  String? validateName(String value) {
+    if (value.isEmpty) {
+      return "Name can't be empty";
+    } else if (value.length < 4) {
+      return "Min. 4 characters required";
+    } else {
+     return null;
+    }
+  }
+
+  String? validateNumber(String value) {
+    RegExp regex = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+    if (value.isEmpty) {
+      return "Phone Number can't be empty";
+    } else if (!regex.hasMatch(value)) {
+      return "Phone Number at least 10-12 characters";
+    } else {
+      return null;
+    }
+  }
 }

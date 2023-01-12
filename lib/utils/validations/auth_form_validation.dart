@@ -7,11 +7,15 @@ class AuthFormValidation {
     switch (field) {
       case "email":
         return formFieldValidation.emailField(value);
-      // break;
 
       case "password":
         return formFieldValidation.validatePassword(value);
-      // break;
+
+      case "name":
+        return formFieldValidation.validateName(value);
+
+      case "number":
+        return formFieldValidation.validateNumber(value);
     }
     return null;
   }

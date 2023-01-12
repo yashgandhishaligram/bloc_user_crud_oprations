@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -71,188 +72,187 @@ class _AddUserDetailsState extends State<AddUserDetails> {
   }
 
   Widget _addUserView(state) {
-   /*  state.selectedGender =  widget.addFlag? "": gender;*/
+    final formKey = GlobalKey<FormState>();
+    /*  state.selectedGender =  widget.addFlag? "": gender;*/
     return SingleChildScrollView(
       padding: EdgeInsets.all(15.0),
-      child: Column(
-        children: [
-          TextFormField(
-            controller: nameController,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-              hintText: "Enter Name",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+      child: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: nameController,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: "Enter Name",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              validator: (value) =>
+                  AuthFormValidation().formValidation(value!, "name"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            controller: numberController,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-              hintText: "Enter Phone Number",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
+            SizedBox(
+              height: 10,
             ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          TextFormField(
-            controller: emailController,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-              hintText: "Enter Email",
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+            TextFormField(
+              controller: numberController,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: "Enter Phone Number",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                counterText: "",
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2.0),
-                borderRadius: BorderRadius.circular(12),
-              ),
+              maxLength: 12,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              validator: (value) =>
+                  AuthFormValidation().formValidation(value!, "number"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
             ),
-            validator: (value) =>
-                AuthFormValidation().formValidation(value!, "email"),
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Select gender :",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500),
+            SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+              controller: emailController,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: "Enter Email",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(width: 2.0),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-            ],
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          RadioListTile(
-            title: const Text("Male"),
-            value: "male",
-            groupValue: state.selectedGender,
-            onChanged: (value) {
-              adduserBloc!.add(SelectGenderEvent(value.toString()));
-            },
-          ),
-          RadioListTile(
-            title: const Text("Female"),
-            value: "female",
-            groupValue: state.selectedGender,
-            onChanged: (value) {
-              adduserBloc!.add(SelectGenderEvent(value.toString()));
-            },
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                "Select Job Preference :",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-          const SizedBox(height: 15.0),
-          DecoratedBox(
-              decoration: BoxDecoration(
-                  color: Colors.blueGrey,
-                  borderRadius: BorderRadius.circular(5),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                        color:
-                            Color.fromRGBO(0, 0, 0, 0.57), //shadow for button
-                        blurRadius: 5) //blur radius of shadow
-                  ]),
-              child: Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: DropdownButtonFormField(
-                    hint: const Text(
-                      "Select Job Preference",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    value: selectedJobPref,
-                    borderRadius: BorderRadius.circular(10),
-                    items: jobPrefList.map((String items) {
-                      return DropdownMenuItem(
-                        value: items,
-                        child: Text(items),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      selectedJobPref = value;
-                    },
-                    isExpanded: true,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                    dropdownColor: Colors.blueGrey,
-                    iconEnabledColor: Colors.white, //Icon color
-                  ))),
-          SizedBox(
-            height: 40,
-          ),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.green, // Background color
-              ),
-              onPressed: () {
-                if (widget.addFlag) {
-                  adduserBloc!.add(AddUserDetailsEvent(
-                      nameController.text,
-                      int.parse(numberController.text),
-                      emailController.text,
-                      state.selectedGender.toString(),
-                      selectedJobPref.toString()));
-                } else {
-                  adduserBloc!.add(UpdateUserDetailsEvent(
-                      widget.data!.id!,
-                      nameController.text,
-                      int.parse(numberController.text),
-                      emailController.text.toString(),
-                      state.selectedGender.toString(),
-                      selectedJobPref.toString()));
-                }
+              validator: (value) =>
+                  AuthFormValidation().formValidation(value!, "email"),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  "Select gender :",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            RadioListTile(
+              title: const Text("Male"),
+              value: "male",
+              groupValue: state.selectedGender,
+              onChanged: (value) {
+                adduserBloc!.add(SelectGenderEvent(value.toString()));
               },
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 20.0, right: 20, top: 15, bottom: 15),
-                child: Text(widget.addFlag ? "Submit" : "Update"),
-              )),
-        ],
+            ),
+            RadioListTile(
+              title: const Text("Female"),
+              value: "female",
+              groupValue: state.selectedGender,
+              onChanged: (value) {
+                adduserBloc!.add(SelectGenderEvent(value.toString()));
+              },
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  "Select Job Preference :",
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15.0),
+            DecoratedBox(
+                decoration: BoxDecoration(
+                    color: Colors.blueGrey,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                          color:
+                              Color.fromRGBO(0, 0, 0, 0.57), //shadow for button
+                          blurRadius: 5) //blur radius of shadow
+                    ]),
+                child: Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: DropdownButtonFormField(
+                      hint: const Text(
+                        "Select Job Preference",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      value: selectedJobPref,
+                      borderRadius: BorderRadius.circular(10),
+                      items: jobPrefList.map((String items) {
+                        return DropdownMenuItem(
+                          value: items,
+                          child: Text(items),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        selectedJobPref = value;
+                      },
+                      isExpanded: true,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                      dropdownColor: Colors.blueGrey,
+                      iconEnabledColor: Colors.white, //Icon color
+                    ))),
+            SizedBox(
+              height: 40,
+            ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.green, // Background color
+                ),
+                onPressed: () {
+                  validateUserDetails(formKey, state);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20.0, right: 20, top: 15, bottom: 15),
+                  child: Text(widget.addFlag ? "Submit" : "Update"),
+                )),
+          ],
+        ),
       ),
     );
   }
@@ -290,5 +290,43 @@ class _AddUserDetailsState extends State<AddUserDetails> {
               dropdownColor: Colors.blueGrey,
               iconEnabledColor: Colors.white, //Icon color
             )));
+  }
+
+  showSnackBar(String text) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(text, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.blueGrey,
+      ),
+    );
+  }
+
+  validateUserDetails(formKey, state) {
+    if (formKey.currentState!.validate()) {
+      if (state.selectedGender == null || state.selectedGender == "") {
+        showSnackBar("Please select Gender");
+      } else if (selectedJobPref == null || selectedJobPref == "") {
+        showSnackBar("Please select Job Preference");
+      } else {
+        if (widget.addFlag) {
+          adduserBloc!.add(AddUserDetailsEvent(
+              nameController.text,
+              int.parse(numberController.text),
+              emailController.text,
+              state.selectedGender.toString(),
+              selectedJobPref.toString()));
+        } else {
+          adduserBloc!.add(UpdateUserDetailsEvent(
+              widget.data!.id!,
+              nameController.text,
+              int.parse(numberController.text),
+              emailController.text.toString(),
+              state.selectedGender.toString(),
+              selectedJobPref.toString()));
+        }
+      }
+    } else {
+      showSnackBar("Please Complete All Require Details");
+    }
   }
 }

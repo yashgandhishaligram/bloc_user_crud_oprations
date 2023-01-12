@@ -39,3 +39,4 @@ class GetUserListEvent extends AdduserEvent {
   // TODO: implement props
   List<Object?> get props => [];
 }
+
