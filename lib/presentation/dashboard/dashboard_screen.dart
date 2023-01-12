@@ -37,13 +37,7 @@ class DashboardScreen extends StatelessWidget {
                 )),
             IconButton(
                 onPressed: () async {
-                  await locator.setUsedLoggedIn(false);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => LoginPage(),
-                    ),
-                  );
+                  showAlertDialog(context);
                 },
                 icon: const Icon(Icons.logout_outlined,
                     color: Colors.white, size: 30))
@@ -71,6 +65,7 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _getUserListView(List<UserModel> snapshot) {
+
     return Container(
       decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.3),
@@ -229,4 +224,37 @@ class DashboardScreen extends StatelessWidget {
           }),
     );
   }
+
+
+  showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      title: const Text("Logout"),
+      content: const Text("Are you sure you want to Logout?"),
+      actions: [
+        TextButton(
+            onPressed: () {
+          Navigator.pop(context);
+        }, child: const Text("Cancel",style: TextStyle(color: Colors.grey),)),
+        TextButton(
+            onPressed: () async {
+              await locator.setUsedLoggedIn(false);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: ( context) => LoginPage(),
+                ),
+              );
+        }, child: const Text("Logout")),
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
 }

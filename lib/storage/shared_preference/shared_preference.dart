@@ -40,13 +40,4 @@ class SharedPreferenceHelper {
       return false;
     }
   }
-
- /* Future<void> setUserName({required String userName}) async {
-    await prefs.setString(username, userName);
-  }*/
-
- /* String? getUserName() {
-    final userName = prefs.getString(username);
-    return userName;
-  }*/
 }

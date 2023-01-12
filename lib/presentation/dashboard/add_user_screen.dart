@@ -46,7 +46,8 @@ class _AddUserDetailsState extends State<AddUserDetails> {
           centerTitle: true,
         ),
         body:
-            BlocConsumer<AdduserBloc, AdduserState>(builder: (context, state) {
+            BlocConsumer<AdduserBloc, AdduserState>(
+                builder: (context, state) {
           return _addUserView(state);
         }, listener: (context, state) {
           if (state is AddUserSuccessState) {
@@ -65,7 +66,7 @@ class _AddUserDetailsState extends State<AddUserDetails> {
       nameController.text = data.name!;
       numberController.text = data.mobileNumber!.toString();
       emailController.text = data.email!;
-      gender = data.gender!;
+      gender = addFlag? "" : data.gender!;
       selectedJobPref = data.jobPreference!;
       userId = data.id!;
     }
@@ -73,9 +74,9 @@ class _AddUserDetailsState extends State<AddUserDetails> {
 
   Widget _addUserView(state) {
     final formKey = GlobalKey<FormState>();
-    /*  state.selectedGender =  widget.addFlag? "": gender;*/
+/*    state.selectedGender = gender;*/
     return SingleChildScrollView(
-      padding: EdgeInsets.all(15.0),
+      padding: const EdgeInsets.all(15.0),
       child: Form(
         key: formKey,
         child: Column(
@@ -89,11 +90,11 @@ class _AddUserDetailsState extends State<AddUserDetails> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(width: 2.0),
+                  borderSide: const BorderSide(width: 2.0),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(width: 2.0),
+                  borderSide: const BorderSide(width: 2.0),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
