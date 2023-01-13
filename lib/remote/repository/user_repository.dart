@@ -10,7 +10,6 @@ class UserRepository {
 
   final sqlService = getIt.get<SQLService>();
 
-
   factory UserRepository() {
     return _singleton;
   }
@@ -23,10 +22,8 @@ class UserRepository {
       String jobPreference) async {
     try{
      await sqlService.addUser(name, mobileNumber, email, gender, jobPreference);
-     fetchUserDetails();
       return UserModel();
     }catch (e) {
-      print(e);
       return null;
     }
   }
@@ -39,12 +36,9 @@ class UserRepository {
       String gender,
       String jobPreference) async {
     try{
-      var update = await sqlService.updateUser(id,name, mobileNumber, email, gender, jobPreference);
-      /*fetchUserDetails();*/
-      print("update "   + update.toString());
+       await sqlService.updateUser(id,name, mobileNumber, email, gender, jobPreference);
       return UserModel();
     }catch (e) {
-      print(e);
       return null;
     }
   }
@@ -54,17 +48,16 @@ class UserRepository {
        List<UserModel> usersList  = await sqlService.fetchUsers();
       return usersList;
     } catch (e) {
-      print(e);
+      return null;
     }
   }
 
   Future deleteUser(int userId) async {
     try {
       var deleteUser  = await sqlService.deleteUser(userId);
-      print("delete----------" + deleteUser.toString());
       return deleteUser;
     } catch (e) {
-      print(e);
+      return null;
     }
   }
 

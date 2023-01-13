@@ -13,6 +13,10 @@ part 'adduser_state.dart';
 
 class AdduserBloc extends Bloc<AdduserEvent, AdduserState> {
   UserRepository userRepository = UserRepository();
+  final selectedRadioController = StreamController<String>.broadcast();
+  Stream<String> get selectedRadio => selectedRadioController.stream;
+  Sink<String> get selectRadioSink => selectedRadioController.sink;
+
   AdduserBloc() : super(AdduserInitialState(selectedGender: "")) {
     on<SelectGenderEvent>((event, emit) {
       emit(AdduserInitialState(selectedGender: event.selectvalue!));

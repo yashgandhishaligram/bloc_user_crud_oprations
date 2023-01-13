@@ -16,11 +16,9 @@ class SQLService {
           onCreate: (Database db, int version) async {
         this.db = db;
         createTables();
-        print("database open successfully");
       });
       return true;
     } catch (e) {
-      print("ERROR IN OPEN DATABASE $e");
       return Future.error(e);
     }
   }
@@ -36,8 +34,6 @@ class SQLService {
           "job_preference TEXT)";
       await db?.execute(user);
     } catch (e) {
-      print("ERROR IN CREATE TABLE");
-      print(e);
     }
   }
 

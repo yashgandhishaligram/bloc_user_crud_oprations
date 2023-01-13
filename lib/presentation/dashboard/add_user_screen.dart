@@ -21,10 +21,10 @@ class _AddUserDetailsState extends State<AddUserDetails> {
   TextEditingController nameController = TextEditingController();
   TextEditingController numberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  String? gender;
+  String? selectedGender;
   String? selectedJobPref;
   var jobPrefList = ['Full Time', 'Part Time', 'Hourly Base'];
-  AdduserBloc? adduserBloc;
+  AdduserBloc adduserBloc = AdduserBloc();
   DashboardBloc? dashboardBloc;
   int? userId;
 
@@ -45,8 +45,7 @@ class _AddUserDetailsState extends State<AddUserDetails> {
           title: Text(widget.addFlag ? "Add User" : "Edit User"),
           centerTitle: true,
         ),
-        body:
-            BlocConsumer<AdduserBloc, AdduserState>(
+        body: BlocConsumer<AdduserBloc, AdduserState>(
                 builder: (context, state) {
           return _addUserView(state);
         }, listener: (context, state) {
@@ -66,7 +65,7 @@ class _AddUserDetailsState extends State<AddUserDetails> {
       nameController.text = data.name!;
       numberController.text = data.mobileNumber!.toString();
       emailController.text = data.email!;
-      gender = addFlag? "" : data.gender!;
+      selectedGender = addFlag ? "" : data.gender!;
       selectedJobPref = data.jobPreference!;
       userId = data.id!;
     }
@@ -172,21 +171,35 @@ class _AddUserDetailsState extends State<AddUserDetails> {
             SizedBox(
               height: 8,
             ),
-            RadioListTile(
-              title: const Text("Male"),
-              value: "male",
-              groupValue: state.selectedGender,
-              onChanged: (value) {
-                adduserBloc!.add(SelectGenderEvent(value.toString()));
-              },
-            ),
-            RadioListTile(
-              title: const Text("Female"),
-              value: "female",
-              groupValue: state.selectedGender,
-              onChanged: (value) {
-                adduserBloc!.add(SelectGenderEvent(value.toString()));
-              },
+            StreamBuilder<String>(
+              stream: adduserBloc.selectedRadio,
+              initialData: selectedGender, //
+              builder: (context, snapshot){
+                return Column(
+                  children: [
+                    RadioListTile(
+                      title: const Text("Male"),
+                      value: "male",
+                      groupValue: snapshot.data,
+                      onChanged: (value) {
+                        adduserBloc.selectRadioSink.add(value!);
+                        selectedGender = value;
+                        // adduserBloc.add(SelectGenderEvent(value.toString())); /*change Value Using State /*
+                      },
+                    ),
+                    RadioListTile(
+                      title: const Text("Female"),
+                      value: "female",
+                      groupValue: snapshot.data,
+                      onChanged: (value) {
+                        adduserBloc.selectRadioSink.add(value!);
+                        selectedGender = value;
+                        // adduserBloc.add(SelectGenderEvent(value.toString()));  /*change Value Using State /*
+                      },
+                    ),
+                  ],
+                );
+              }
             ),
             SizedBox(
               height: 8,
@@ -304,25 +317,25 @@ class _AddUserDetailsState extends State<AddUserDetails> {
 
   validateUserDetails(formKey, state) {
     if (formKey.currentState!.validate()) {
-      if (state.selectedGender == null || state.selectedGender == "") {
-        showSnackBar("Please select Gender");
+      if (selectedGender == null || selectedGender == "") {
+        showSnackBar("Please Select Gender");
       } else if (selectedJobPref == null || selectedJobPref == "") {
-        showSnackBar("Please select Job Preference");
+        showSnackBar("Please Select Job Preference");
       } else {
         if (widget.addFlag) {
-          adduserBloc!.add(AddUserDetailsEvent(
+          adduserBloc.add(AddUserDetailsEvent(
               nameController.text,
               int.parse(numberController.text),
               emailController.text,
-              state.selectedGender.toString(),
+              selectedGender.toString(),
               selectedJobPref.toString()));
         } else {
-          adduserBloc!.add(UpdateUserDetailsEvent(
+          adduserBloc.add(UpdateUserDetailsEvent(
               widget.data!.id!,
               nameController.text,
               int.parse(numberController.text),
               emailController.text.toString(),
-              state.selectedGender.toString(),
+              selectedGender.toString(),
               selectedJobPref.toString()));
         }
       }
