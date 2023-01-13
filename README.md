@@ -1,8 +1,8 @@
 # bloc_user_crud_oprations
 
-Flutter Blog Impletation with User CRUD Oprations.
+Flutter Bloc Impletation with User CRUD Oprations.
 
-- BLoc
+- Bloc
 - Sqflite
 - get it 
 
