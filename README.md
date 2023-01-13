@@ -7,5 +7,5 @@ Flutter Bloc Impletation with User CRUD Oprations.
 - get it 
 
 Login Credentials:
-email : yash@shaligram.com
+email : yash@shaligram.com,
 password : Yg@12345
