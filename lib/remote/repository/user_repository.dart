@@ -1,3 +1,4 @@
+import 'package:bloc_user_crud_oprations/remote/dto/user_dto.dart';
 import 'package:bloc_user_crud_oprations/remote/models/UserModel.dart';
 import 'package:bloc_user_crud_oprations/storage/sql/sql_service.dart';
 
@@ -46,6 +47,16 @@ class UserRepository {
   Future fetchUserDetails() async {
     try {
        List<UserModel> usersList  = await sqlService.fetchUsers();
+      return usersList;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future fetchUserDetailFromUserDTO() async {
+    try {
+      List<UserDTO> usersList  = await sqlService.fetchUsersFromUserDTO();
+   /*  print("repository" + usersList.toString());*/
       return usersList;
     } catch (e) {
       return null;

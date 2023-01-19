@@ -1,4 +1,5 @@
 import 'package:bloc_user_crud_oprations/bloc/dashboard/dashboard_bloc.dart';
+import 'package:bloc_user_crud_oprations/bloc/dashboard_freezed/dashboard_freezed_bloc.dart';
 import 'package:bloc_user_crud_oprations/bloc/login/login_bloc.dart';
 import 'package:bloc_user_crud_oprations/bloc/splash/splash_bloc.dart';
 import 'package:bloc_user_crud_oprations/presentation/splash/splash_screen.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/add user/adduser_bloc.dart';
+import 'bloc/dashboard_freezed/dashboard_freezed_event.dart';
 import 'di/locator.dart';
 import 'storage/shared_preference/shared_preference.dart';
 import 'storage/sql/sql_service.dart';
@@ -38,6 +40,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => DashboardBloc()..add(DashboardInitialEvent()),
+        ),
+        BlocProvider(
+          create: (context) => DashboardFreezedBloc()..add(FetchUsersEvent()),
         ),
       ],
       child: Builder(

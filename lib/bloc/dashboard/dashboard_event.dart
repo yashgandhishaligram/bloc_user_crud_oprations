@@ -1,7 +1,8 @@
+
 part of 'dashboard_bloc.dart';
 
 abstract class DashboardEvent extends Equatable {
-  const DashboardEvent();
+    const DashboardEvent();
 }
 
 class DashboardInitialEvent extends DashboardEvent {

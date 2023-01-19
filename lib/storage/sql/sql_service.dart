@@ -1,3 +1,4 @@
+import 'package:bloc_user_crud_oprations/remote/dto/user_dto.dart';
 import 'package:bloc_user_crud_oprations/remote/models/UserModel.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -39,9 +40,18 @@ class SQLService {
 
   Future<List<UserModel>> fetchUsers() async {
     try {
-      final List<Map<String, Object?>> data =
-          await db!.rawQuery("SELECT * FROM users", []);
+      final List<Map<String, Object?>> data = await db!.rawQuery("SELECT * FROM users", []);
       var result = data.map((e) => UserModel.fromJson(e)).toList();
+      return result;
+    } catch (e) {
+      return Future.error(e);
+    }
+  }
+
+  Future<List<UserDTO>> fetchUsersFromUserDTO() async {
+    try {
+      final List<Map<String, Object?>> data = await db!.rawQuery("SELECT * FROM users", []);
+      var result = data.map((e) => UserDTO.fromJson(e)).toList();
       return result;
     } catch (e) {
       return Future.error(e);

@@ -1,16 +1,16 @@
+import 'package:bloc_user_crud_oprations/bloc/dashboard_freezed/dashboard_freezed_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../bloc/add user/adduser_bloc.dart';
-import '../../bloc/dashboard/dashboard_bloc.dart';
-import '../../remote/models/UserModel.dart';
+import '../../bloc/dashboard_freezed/dashboard_freezed_event.dart';
+import '../../remote/dto/user_dto.dart';
 import '../../utils/validations/auth_form_validation.dart';
 
 class AddUserDetails extends StatefulWidget {
   AddUserDetails({Key? key, this.data, this.addFlag = true}) : super(key: key);
-  UserModel? data;
+  UserDTO? data;
   bool addFlag;
 
   @override
@@ -25,7 +25,7 @@ class _AddUserDetailsState extends State<AddUserDetails> {
   String? selectedJobPref;
   var jobPrefList = ['Full Time', 'Part Time', 'Hourly Base'];
   AdduserBloc adduserBloc = AdduserBloc();
-  DashboardBloc? dashboardBloc;
+  DashboardFreezedBloc? dashboardFreezedBloc;
   int? userId;
 
   @override
@@ -38,29 +38,30 @@ class _AddUserDetailsState extends State<AddUserDetails> {
   @override
   Widget build(BuildContext context) {
     adduserBloc = BlocProvider.of<AdduserBloc>(context);
-    dashboardBloc = BlocProvider.of<DashboardBloc>(context);
+    dashboardFreezedBloc = BlocProvider.of<DashboardFreezedBloc>(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
-          title: Text(widget.addFlag ? "Add User" : "Edit User"),
+          title: Text(widget.addFlag ? "Add New Chef" : "Edit Chef"),
           centerTitle: true,
         ),
         body: BlocConsumer<AdduserBloc, AdduserState>(
                 builder: (context, state) {
-          return _addUserView(state);
-        }, listener: (context, state) {
-          if (state is AddUserSuccessState) {
-            Navigator.pop(context);
-            dashboardBloc!.add(DashboardInitialEvent());
-            Fluttertoast.showToast(
-                msg: widget.addFlag
-                    ? "User Added successfully"
-                    : "User Updated successfully");
+                return _addUserView(state);
+                },
+               listener: (context, state) {
+               if (state is AddUserSuccessState) {
+                 Navigator.pop(context);
+                 dashboardFreezedBloc!.add(DashboardFreezedEvent.fetchUsers());
+                Fluttertoast.showToast(
+                    msg: widget.addFlag
+                        ? "User Added successfully"
+                        : "User Updated successfully");
           }
         }));
   }
 
-  setUserData(UserModel data, bool addFlag) {
+  setUserData(UserDTO data, bool addFlag) {
     if (addFlag == false) {
       nameController.text = data.name!;
       numberController.text = data.mobileNumber!.toString();

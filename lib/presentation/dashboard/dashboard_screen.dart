@@ -1,23 +1,27 @@
-import 'package:bloc_user_crud_oprations/bloc/dashboard/dashboard_bloc.dart';
+import 'package:bloc_user_crud_oprations/bloc/dashboard_freezed/dashboard_freezed_bloc.dart';
+import 'package:bloc_user_crud_oprations/bloc/dashboard_freezed/dashboard_freezed_event.dart';
+import 'package:bloc_user_crud_oprations/bloc/dashboard_freezed/dashboard_freezed_state.dart';
 import 'package:bloc_user_crud_oprations/presentation/dashboard/add_user_screen.dart';
+import 'package:bloc_user_crud_oprations/remote/dto/user_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../di/locator.dart';
-import '../../remote/models/UserModel.dart';
 import '../../storage/shared_preference/shared_preference.dart';
 import '../login/login_screen.dart';
 
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({Key? key}) : super(key: key);
   final locator = getIt.get<SharedPreferenceHelper>();
-  DashboardBloc? dashboardBloc;
+  DashboardFreezedBloc? dashboardFreezeBloc;
+  Widget? view;
+
   @override
   Widget build(BuildContext context) {
-    dashboardBloc = BlocProvider.of<DashboardBloc>(context);
+    dashboardFreezeBloc = BlocProvider.of<DashboardFreezedBloc>(context);
+    view = const SizedBox();
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Best Safes"),
+          title: const Text("Best Chefs"),
           centerTitle: true,
           backgroundColor: Colors.green,
           actions: [
@@ -45,27 +49,29 @@ class DashboardScreen extends StatelessWidget {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            dashboardBloc!.add(DashboardInitialEvent());
+            dashboardFreezeBloc!.add(DashboardFreezedEvent.fetchUsers());
           },
-          child: BlocBuilder<DashboardBloc, DashboardState>(
+          child : BlocBuilder<DashboardFreezedBloc, DashboardFreezedState>(
             builder: (context, state) {
-              if (state is DashBoardLoadingState) {
-                return const Center(
-                    child: CircularProgressIndicator(color: Colors.green));
-              } else if (state is DashBoardSuccessState) {
-                return _getUserListView(state.userList);
-              } else if (state is DashboardErrorState) {
-                return Center(child: Text(state.exception.toString()));
-              } else {
-                return Container();
-              }
+              state.when(
+                loading: () {
+                  view =  Center(
+                      child: CircularProgressIndicator(color: Colors.green));
+                },
+                content : (listData) {
+                  view = _getUserListView(listData);
+                },
+                error: (e) {
+                  view = showNoDataView(e);
+                }
+              );
+              return view!;
             },
           ),
         ));
   }
 
-  Widget _getUserListView(List<UserModel> snapshot) {
-
+  Widget _getUserListView(List<UserDTO> snapshot) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.grey.withOpacity(0.3),
@@ -73,10 +79,11 @@ class DashboardScreen extends StatelessWidget {
               bottomLeft: Radius.circular(20.0),
               bottomRight: Radius.circular(20.0))),
       child: ListView.builder(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           itemCount: snapshot.length,
           shrinkWrap: true,
           itemBuilder: (context, index) {
+          /*  print("index data" + snapshot[index].name.toString());*/
             return Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
@@ -116,9 +123,8 @@ class DashboardScreen extends StatelessWidget {
                                 color: Colors.green,
                               ),
                               onPressed: () {
-                                dashboardBloc!
-                                    .add(DeleteUserEvent(snapshot[index].id!));
-                                dashboardBloc!.add(DashboardInitialEvent());
+                                dashboardFreezeBloc!.add(DashboardFreezedEvent.deleteUser(snapshot[index].id!));
+                                dashboardFreezeBloc!.add(DashboardFreezedEvent.fetchUsers());
                               },
                             ),
                           ],
@@ -233,7 +239,7 @@ class DashboardScreen extends StatelessWidget {
       actions: [
         TextButton(
             onPressed: () {
-          Navigator.pop(context);
+           Navigator.pop(context);
         }, child: const Text("Cancel",style: TextStyle(color: Colors.grey),)),
         TextButton(
             onPressed: () async {
@@ -257,4 +263,30 @@ class DashboardScreen extends StatelessWidget {
   }
 
 
+  showNoDataView(error){
+    return Center(
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.no_accounts_outlined,size: 80,color: Colors.green),
+          SizedBox(height: 5),
+          Text(error.toString(),
+            style: TextStyle(
+            color: Colors.green,
+            fontSize: 20,
+              fontWeight: FontWeight.w500
+          ),
+          ),
+          SizedBox(height: 8),
+          Text("click on " + "+" + " icon to add new chef",
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
